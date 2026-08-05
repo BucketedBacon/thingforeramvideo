@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOARD_02_MANIFEST</title>
+    <style>
+        /* Imports the exact open-source 8-Bit Operator pixel font */
+        @import url('https://cdnfonts.com');
+
+        body {
+            background-color: black;
+            color: #ffffff; /* Crisp white text */
+            font-family: '8bit Operator JVE', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            letter-spacing: 2px; /* Spaces out the pixels slightly like the boards */
+        }
+        .text-container {
+            max-width: 700px;
+            font-size: 24px; /* Larger size to keep the pixel edges sharp */
+            line-height: 1.8;
+        }
+        #jumpscare-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        #jumpscare-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            filter: contrast(180%) brightness(90%); 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="text-container" id="dialogue-box">
+        <p>So you do think this will get you something. Anything at all.</p>
+        <p>What do you want from me? An ARG? </p>
+        <p>I don't have the budget for that!</p>
+        <p>So, take this instead.</p>
+    </div>
+
+    <div id="jumpscare-overlay">
+        <img src="image_friend.png" alt="FRIEND">
+    </div>
+
+    <script>
+        setTimeout(function() {
+            document.getElementById('dialogue-box').style.display = 'none';
+            document.getElementById('jumpscare-overlay').style.display = 'flex';
+            
+            setTimeout(function() {
+                window.location.href = "https://deltarune.com/thankyou";
+            }, 1500); 
+        }, 6000); 
+    </script>
+
+</body>
+</html>
