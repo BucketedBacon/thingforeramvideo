@@ -5,26 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BOARD_02_MANIFEST</title>
     <style>
-        /* Imports the exact open-source 8-Bit Operator pixel font */
         @import url('https://cdnfonts.com');
 
         body {
             background-color: black;
-            color: #ffffff; /* Crisp white text */
-            font-family: '8bit Operator JVE', monospace;
+            color: #ffffff;
+            font-family: '8bit Operator JVE', 'Courier New', monospace;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
             text-align: center;
-            letter-spacing: 2px; /* Spaces out the pixels slightly like the boards */
+            letter-spacing: 2px;
+            cursor: pointer; /* Shows the user they can click to advance */
         }
         .text-container {
             max-width: 700px;
-            font-size: 24px; /* Larger size to keep the pixel edges sharp */
+            font-size: 24px;
             line-height: 1.8;
+            text-transform: uppercase;
+            min-height: 100px; /* Prevents layout shifting between lines */
+        }
+        .prompt-text {
+            color: #666;
+            font-size: 14px;
+            margin-top: 40px;
+            text-transform: uppercase;
         }
         #jumpscare-overlay {
             display: none;
@@ -47,26 +56,73 @@
 </head>
 <body>
 
-    <div class="text-container" id="dialogue-box">
-        <p>So you do think this will get you something. Anything at all.</p>
-        <p>What do you want from me? An ARG? </p>
-        <p>I don't have the budget for that!</p>
-        <p>So, take this instead.</p>
-    </div>
+    <!-- The container where dialogue lines will cycle -->
+    <div class="text-container" id="dialogue-box"></div>
+    
+    <!-- Small indicator at the bottom to guide players -->
+    <div class="prompt-text" id="prompt-box">[ PRESS Z OR CLICK TO ADVANCE ]</div>
 
     <div id="jumpscare-overlay">
-        <img src="image_friend.jpg" alt="FRIEND">
+        <img src="./image_friend.jpg" alt="FRIEND">
     </div>
 
     <script>
-        setTimeout(function() {
-            document.getElementById('dialogue-box').style.display = 'none';
+        // Array of lines to display sequentially
+        const dialogueLines = [
+            "So you do think this will get you something.",
+            "Anything at all.",
+            "What do you want from me?",
+            "An ARG?",
+            "I don't have the budget for that!",
+            "So, take this instead."
+        ];
+
+        let currentLineIndex = 0;
+        const dialogueBox = document.getElementById('dialogue-box');
+
+        // Function to update the text on screen
+        function displayCurrentLine() {
+            if (currentLineIndex < dialogueLines.length) {
+                dialogueBox.innerHTML = `<p>${dialogueLines[currentLineIndex]}</p>`;
+            } else {
+                // If out of lines, trigger the jumpscare payoff
+                triggerJumpscare();
+            }
+        }
+
+        function advanceDialogue() {
+            currentLineIndex++;
+            displayCurrentLine();
+        }
+
+        function triggerJumpscare() {
+            // Hide all dialogue components
+            dialogueBox.style.display = 'none';
+            document.getElementById('prompt-box').style.display = 'none';
+            
+            // Show IMAGE_FRIEND.jpg overlay
             document.getElementById('jumpscare-overlay').style.display = 'flex';
             
+            // Force final redirect after 1.5 seconds of exposure
             setTimeout(function() {
-                window.location.href = "https://deltarune.com/thankyou";
+                window.location.href = "https://deltarune.com";
             }, 1500); 
-        }, 6000); 
+        }
+
+        // Listen for keyboard inputs (specifically the 'Z' key)
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'z' || event.key === 'Z') {
+                advanceDialogue();
+            }
+        });
+
+        // Mobile backup: Listen for screen clicks/taps so phone users aren't locked out
+        document.addEventListener('click', function() {
+            advanceDialogue();
+        });
+
+        // Initialize the very first line when page loads
+        displayCurrentLine();
     </script>
 
 </body>
